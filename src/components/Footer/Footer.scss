@@ -1,0 +1,5 @@
+.site-footer { border-top: 1px solid var(--border); padding-top: 35px; padding-bottom: 35px; display: grid; grid-template-columns: 1fr auto; gap: 18px; }
+.footer-mark { color: var(--accent); font: 800 28px Manrope; letter-spacing: -3px; }.site-footer p { color: var(--muted); font-size: 11px; max-width: 300px; line-height: 1.6; }
+.footer-links { display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap; }.footer-links a { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; text-decoration: none; }.footer-links a:hover { color: var(--accent); }
+.site-footer > small { grid-column: 1 / -1; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 9px; }
+@media (max-width: 600px) { .site-footer { grid-template-columns: 1fr; }.footer-links { gap: 14px; } }

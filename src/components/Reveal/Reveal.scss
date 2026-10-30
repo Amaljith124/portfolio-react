@@ -1,0 +1,13 @@
+.reveal { opacity: 0; transition: opacity .9s cubic-bezier(.22, 1, .36, 1) var(--reveal-delay, 0ms), transform .9s cubic-bezier(.22, 1, .36, 1) var(--reveal-delay, 0ms); will-change: opacity, transform; }
+.reveal-up { transform: translate3d(0, 36px, 0); }
+.reveal-left { transform: translate3d(-44px, 0, 0); }
+.reveal-right { transform: translate3d(44px, 0, 0); }
+.reveal-zoom { transform: scale(.94); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+// Children of a .stagger grid appear one after another (animation, so hover transitions stay instant afterwards).
+.stagger > * { opacity: 0; }
+.is-visible.stagger > *, .is-visible .stagger > * { opacity: 1; animation: stagger-in .85s cubic-bezier(.22, 1, .36, 1) backwards; }
+@for $i from 1 through 10 {
+  .is-visible.stagger > *:nth-child(#{$i}), .is-visible .stagger > *:nth-child(#{$i}) { animation-delay: #{($i - 1) * 90}ms; }
+}

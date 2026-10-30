@@ -1,0 +1,1 @@
+Place the approved portfolio portrait here as `amaljith-portrait.jpg` or update the image path in `src/components/Hero/Hero.jsx`. The included portrait is the original user-supplied photo.

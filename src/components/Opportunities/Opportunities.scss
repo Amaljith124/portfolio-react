@@ -1,0 +1,9 @@
+.opportunities-section { padding-top: 30px; padding-bottom: 110px; }
+.opportunity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opportunity-grid article { padding: 28px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.opportunity-grid article > svg { color: var(--accent); }
+.opportunity-grid small { display: block; color: var(--accent); letter-spacing: 1.5px; font-size: 9px; font-weight: 800; margin-top: 18px; }
+.opportunity-grid h3 { color: var(--text); font: 700 22px Manrope; margin: 9px 0; }
+.opportunity-grid p { color: var(--muted); font-size: 12px; line-height: 1.7; max-width: 480px; }
+.opportunity-grid a { display: inline-flex; align-items: center; gap: 7px; color: var(--text); font-size: 11px; font-weight: 700; text-decoration: none; margin-top: 14px; }
+@media (max-width: 650px) { .opportunity-grid { grid-template-columns: 1fr; } }

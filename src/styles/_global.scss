@@ -1,0 +1,59 @@
+@use './variables' as *;
+@use './themes';
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: $font-body; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { max-width: 100%; }
+button, input, textarea, select { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.section-wrap { width: min(100% - 2 * clamp(18px, 5vw, 76px), 1360px); margin-left: auto; margin-right: auto; }
+::selection { background: var(--accent); color: var(--on-accent); }
+
+// Smooth cross-fade of every colour while the theme is switching (class is added by ThemeContext for a moment).
+html.theme-fade, html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after { transition: background-color .55s ease, color .55s ease, border-color .55s ease, box-shadow .55s ease, fill .55s ease, stroke .55s ease !important; }
+
+// Buttons and links shared by every section
+.button { position: relative; overflow: hidden; min-height: 48px; padding: 0 22px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 12px; text-decoration: none; border: 1px solid transparent; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s, background-color .3s, border-color .3s, color .3s; }
+.button svg { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
+.button:hover { transform: translateY(-2px); }
+.button:hover svg:not(.icon-down) { transform: translateX(3px); }
+.button:hover .icon-down { transform: translateY(3px); }
+.button:active { transform: translateY(0) scale(.98); }
+.button-primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 10px 28px -10px var(--glow); }
+.button-primary:hover { background: var(--accent-bright); box-shadow: 0 16px 36px -10px var(--glow); }
+.button-solid { background: var(--solid-bg); color: var(--solid-fg); }
+.button-solid:hover { box-shadow: 0 16px 36px -14px var(--glow); }
+.button-outline { border-color: var(--border-strong); color: var(--text); background: transparent; }
+.button-outline:hover { border-color: var(--accent); background: var(--accent-soft); }
+.text-link { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); font-size: 12px; font-weight: 700; text-decoration: none; transition: gap .3s, color .3s; }
+.text-link:hover { gap: 11px; color: var(--accent-bright); }
+.tag { padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: 11px; background: var(--surface-soft); }
+.icon-button { border: 1px solid var(--border); color: var(--text); background: var(--surface); border-radius: 50%; width: 38px; height: 38px; display: inline-grid; place-items: center; cursor: pointer; transition: border-color .3s, transform .3s, background-color .3s; }
+.icon-button:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+// Keyframes used across the site
+@keyframes rise { from { opacity: 0; transform: translate3d(0, 28px, 0); } }
+@keyframes rise-right { from { opacity: 0; transform: translate3d(46px, 0, 0); } }
+@keyframes chip-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.92); } }
+@keyframes stagger-in { from { opacity: 0; transform: translate3d(0, 30px, 0) scale(.98); } }
+@keyframes drift { from { transform: translate3d(-24px, -12px, 0) scale(1); } to { transform: translate3d(34px, 26px, 0) scale(1.14); } }
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes draw { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 var(--ring, #42c98c88); } 100% { box-shadow: 0 0 0 10px transparent; } }
+@keyframes shimmer { to { background-position: 200% center; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: .001ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; }
+  .reveal, .stagger > * { opacity: 1 !important; transform: none !important; }
+}
+
+// About + Skills share one row on the home page
+.intro-row { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, .95fr) minmax(0, 1.55fr); gap: clamp(28px, 4vw, 64px); padding-top: 90px; padding-bottom: 80px; }
+.intro-row .section-heading { margin-bottom: 22px; }
+.intro-row .section-heading h2 { font-size: clamp(28px, 2.7vw, 38px); }
+.intro-row .skills-block .section-heading { margin-bottom: 26px; }
+@media (max-width: 1100px) { .intro-row { grid-template-columns: 1fr 1fr; } .skills-block { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .intro-row { grid-template-columns: 1fr; padding-top: 64px; padding-bottom: 56px; } }

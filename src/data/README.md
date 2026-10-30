@@ -1,0 +1,1 @@
+Static portfolio data is kept separate from components. Keep facts accurate and do not add unverified metrics or links.

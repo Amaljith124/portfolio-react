@@ -1,0 +1,1 @@
+Contact form submits to Node and stores an enquiry. It does not create a confirmed booking.

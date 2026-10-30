@@ -1,0 +1,10 @@
+.project-detail { min-height: 70vh; padding-top: 90px; padding-bottom: 100px; max-width: 900px; }
+.back-link { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); text-decoration: none; font-size: 11px; margin-bottom: 55px; }
+.project-detail h1 { color: var(--text); font: 800 clamp(38px, 6vw, 68px)/1.05 Manrope; letter-spacing: -.06em; margin: 12px 0; }
+.detail-summary { color: var(--muted); font-size: 17px; line-height: 1.7; max-width: 750px; }
+.detail-panel { margin: 40px 0; padding: 28px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.detail-panel h2 { color: var(--text); font: 700 17px Manrope; margin: 25px 0 10px; }.detail-panel h2:first-child { margin-top: 0; }
+.detail-panel p, .detail-panel li { color: var(--muted); font-size: 13px; line-height: 1.8; }.detail-panel li { margin-bottom: 7px; }
+.detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }.detail-tags span { padding: 7px 10px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: 10px; }
+.project-detail > * { animation: rise .9s cubic-bezier(.22, 1, .36, 1) backwards; }
+.project-detail > *:nth-child(2) { animation-delay: .08s; } .project-detail > *:nth-child(3) { animation-delay: .16s; } .project-detail > *:nth-child(4) { animation-delay: .24s; } .project-detail > *:nth-child(5) { animation-delay: .32s; } .project-detail > *:nth-child(6) { animation-delay: .4s; }
