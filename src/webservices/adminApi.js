@@ -1,8 +1,8 @@
 import { makeRequest, API_ROOT } from './webservices';
-import { getSession } from './adminSession';
+import { getSession } from '../session/adminSession';
 
 // Session helpers live in adminSession.js (webservices.js needs them too); re-exported so the admin pages keep their imports.
-export { getSession, saveSession, clearSession, isAdminRole, SIGNED_OUT_EVENT } from './adminSession';
+export { getSession, saveSession, clearSession, isAdminRole, SIGNED_OUT_EVENT } from '../session/adminSession';
 
 // Every admin call goes through the common makeRequest of webservices.js with its admin flag set (bearer token, session expiry).
 function request(path, options = {}) {

@@ -1,6 +1,6 @@
 import { projects as demoProjects } from "../data/projects";
 import { defaultPortfolio } from "../data/defaultPortfolio";
-import { getSession, clearSession, SIGNED_OUT_EVENT } from "./adminSession";
+import { getSession, clearSession, SIGNED_OUT_EVENT } from "../session/adminSession";
 
 // VITE_API_BASE_URL is the API root, e.g. http://localhost:5000/api; the visitor routes live under /general, the public
 // portfolio routes under /public and the admin routes under /admin. The old value that ends in /general still works.
