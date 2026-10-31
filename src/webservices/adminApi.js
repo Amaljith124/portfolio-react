@@ -1,66 +1,12 @@
-import { API_ROOT } from './webservices';
+import { makeRequest, API_ROOT } from './webservices';
+import { getSession } from './adminSession';
 
-// The admin session lives in sessionStorage (cleared when the tab closes). Only the bearer token is a secret; the server
-// checks it, and the role / tenant, on every request - what the UI hides is never the security.
-const keys = { token: 'portfolio-admin-token', userId: 'portfolio-admin-user-id', role: 'portfolio-admin-role', name: 'portfolio-admin-name', slug: 'portfolio-admin-slug' };
-export const SIGNED_OUT_EVENT = 'portfolio-admin:signed-out';
+// Session helpers live in adminSession.js (webservices.js needs them too); re-exported so the admin pages keep their imports.
+export { getSession, saveSession, clearSession, isAdminRole, SIGNED_OUT_EVENT } from './adminSession';
 
-export function getSession() {
-  const token = sessionStorage.getItem(keys.token);
-  if (token) {
-    return { token: token, userId: sessionStorage.getItem(keys.userId), role: sessionStorage.getItem(keys.role), name: sessionStorage.getItem(keys.name), slug: sessionStorage.getItem(keys.slug) };
-  } else {
-    return null;
-  }
-}
-
-export function saveSession(token, user) {
-  sessionStorage.setItem(keys.token, token);
-  sessionStorage.setItem(keys.userId, user.userId);
-  sessionStorage.setItem(keys.role, user.role);
-  sessionStorage.setItem(keys.name, user.name);
-  sessionStorage.setItem(keys.slug, user.slug || '');
-}
-
-export function clearSession() {
-  Object.values(keys).forEach(key => sessionStorage.removeItem(key));
-}
-
-export function isAdminRole(role) {
-  return role === 'admin' || role === 'super_admin';
-}
-
+// Every admin call goes through the common makeRequest of webservices.js with its admin flag set (bearer token, session expiry).
 function request(path, options = {}) {
-  return new Promise(function (resolve, reject) {
-    const session = getSession();
-    const headers = { 'Content-Type': 'application/json', ...(session ? { Authorization: `Bearer ${session.token}` } : {}) };
-
-    fetch(`${API_ROOT}/admin${path}`, { ...options, headers: headers })
-      .then(function (response) {
-        response.json()
-          .then(function (payload) {
-            if (response.ok) {
-              resolve(payload.data !== undefined ? payload.data : payload);
-            } else {
-              if (response.status === 401 && session) {
-                clearSession();
-                window.dispatchEvent(new Event(SIGNED_OUT_EVENT));
-              } else {
-                // not a session problem
-              }
-              reject(new Error(payload.message || `Request failed (${response.status})`));
-            }
-          })
-          .catch(function (error) {
-            console.error(`[adminApi.request] reading the answer of ${path} failed`, error);
-            reject(new Error('The server sent an unexpected answer.'));
-          });
-      })
-      .catch(function (error) {
-        console.error(`[adminApi.request] sending ${path} failed`, error);
-        reject(new Error('Could not reach the server.'));
-      });
-  });
+  return makeRequest(`${API_ROOT}/admin${path}`, options, true);
 }
 
 export const adminApi = {

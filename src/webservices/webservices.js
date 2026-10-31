@@ -1,5 +1,6 @@
 import { projects as demoProjects } from "../data/projects";
 import { defaultPortfolio } from "../data/defaultPortfolio";
+import { getSession, clearSession, SIGNED_OUT_EVENT } from "./adminSession";
 
 // VITE_API_BASE_URL is the API root, e.g. http://localhost:5000/api; the visitor routes live under /general, the public
 // portfolio routes under /public and the admin routes under /admin. The old value that ends in /general still works.
@@ -18,12 +19,16 @@ const endpoints = {
     chatMessage: "/chat/message"
 };
 
-export function makeRequest(url, options = {})
+// The one function every request of the site goes through. admin = true is for the admin routes: it sends the bearer token of the
+// admin session, ends the session when the server answers 401, and rejects with plain messages the admin screens can show.
+export function makeRequest(url, options = {}, admin = false)
 {
     return new Promise(function (resolve, reject)
     {
+        const session = admin ? getSession() : null;
         const headers = {
             ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+            ...(session ? { Authorization: `Bearer ${session.token}` } : {}),
             ...(options.headers || {})
         };
 
@@ -35,11 +40,20 @@ export function makeRequest(url, options = {})
                     {
                         if (!response.ok)
                         {
+                            if (admin && response.status === 401 && session)
+                            {
+                                clearSession();
+                                window.dispatchEvent(new Event(SIGNED_OUT_EVENT));
+                            }
+                            else
+                            {
+                                // not an admin session problem
+                            }
                             reject(new Error(payload.message || `Request failed (${response.status})`));
                         }
                         else
                         {
-                            resolve(payload.data ?? payload);
+                            resolve(payload.data !== undefined ? payload.data : payload);
                         }
                     })
                     .catch(function (error)
@@ -48,7 +62,7 @@ export function makeRequest(url, options = {})
                             url: url,
                             error: error
                         });
-                        reject(error);
+                        reject(admin ? new Error("The server sent an unexpected answer.") : error);
                     });
             })
             .catch(function (error)
@@ -57,7 +71,7 @@ export function makeRequest(url, options = {})
                     url: url,
                     error: error
                 });
-                reject(error);
+                reject(admin ? new Error("Could not reach the server.") : error);
             });
     });
 }
