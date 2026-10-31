@@ -5,7 +5,7 @@ import { getSession, clearSession, SIGNED_OUT_EVENT } from "../session/adminSess
 // VITE_API_BASE_URL is the API root, e.g. http://localhost:5000/api; the visitor routes live under /general, the public
 // portfolio routes under /public and the admin routes under /admin. The old value that ends in /general still works.
 export const API_ROOT = (
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"
+    import.meta.env.VITE_API_BASE_URL || "https://portfolio-node-2-qy31.onrender.com/api" || "http://localhost:5000/api"
 ).replace(/\/$/, "").replace(/\/general$/, "");
 const BASE_URL = `${API_ROOT}/general`;
 export const DEMO_MODE = String(import.meta.env.VITE_DEMO_MODE ?? "true").toLowerCase() === "true";
