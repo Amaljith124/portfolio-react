@@ -1,24 +1,186 @@
 // Loading placeholder of a portfolio page. Uses the stylesheet theme variables (the portfolio's own theme arrives with the data).
-.sk-page { min-height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
-.sk { display: block; flex: none; background: linear-gradient(100deg, var(--surface-soft) 30%, color-mix(in srgb, var(--surface-soft) 55%, var(--border-strong)) 50%, var(--surface-soft) 70%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
-.sk-bar { border-radius: 8px; max-width: 100%; }
-.sk-title { border-radius: 14px; }
-.sk-pill { border-radius: 999px; }
-.sk-circle { border-radius: 50%; }
-.sk-grow { flex: 1; }
-.sk-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.sk-nav { display: flex; align-items: center; gap: 18px; height: 78px; }
-.sk-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) minmax(0, .8fr); gap: clamp(20px, 3vw, 48px); align-items: center; padding-top: 48px; padding-bottom: 56px; }
-.sk-hero-copy { display: grid; gap: 18px; }
-.sk-chips, .sk-row { display: flex; flex-wrap: wrap; gap: 10px; }
-.sk-row { margin-top: 8px; gap: 14px; }
-.sk-portrait { display: grid; place-items: center; } .sk-portrait .sk { width: min(100%, 360px); aspect-ratio: 1; }
-.sk-tiles { display: grid; gap: 14px; }
-.sk-tile { display: flex; gap: 14px; align-items: center; padding: 18px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); } .sk-tile > div { display: grid; gap: 8px; flex: 1; }
-.sk-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; padding: 26px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
-.sk-stat { display: flex; gap: 14px; align-items: center; } .sk-stat > div { display: grid; gap: 8px; }
-.sk-section { display: grid; gap: 14px; padding-top: 70px; padding-bottom: 80px; }
-.sk-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 18px; }
-.sk-card { display: grid; gap: 12px; padding: 0 0 18px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; } .sk-card .sk-bar { margin: 0 18px; } .sk-art { height: 150px; }
-@media (max-width: 1000px) { .sk-hero { grid-template-columns: 1fr; } .sk-portrait { order: -1; } .sk-portrait .sk { width: min(70%, 260px); } .sk-hide-sm { display: none; } }
-@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+.sk-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+}
+
+.sk {
+    display: block;
+    flex: none;
+    background: linear-gradient(100deg, var(--surface-soft) 30%, color-mix(in srgb, var(--surface-soft) 55%, var(--border-strong)) 50%, var(--surface-soft) 70%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+}
+
+.sk-bar {
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+.sk-title {
+    border-radius: 14px;
+}
+
+.sk-pill {
+    border-radius: 999px;
+}
+
+.sk-circle {
+    border-radius: 50%;
+}
+
+.sk-grow {
+    flex: 1;
+}
+
+.sk-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.sk-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    height: 78px;
+}
+
+.sk-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) minmax(0, .8fr);
+    gap: clamp(20px, 3vw, 48px);
+    align-items: center;
+    padding-top: 48px;
+    padding-bottom: 56px;
+}
+
+.sk-hero-copy {
+    display: grid;
+    gap: 18px;
+}
+
+.sk-chips,
+.sk-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sk-row {
+    margin-top: 8px;
+    gap: 14px;
+}
+
+.sk-portrait {
+    display: grid;
+    place-items: center;
+}
+
+.sk-portrait .sk {
+    width: min(100%, 360px);
+    aspect-ratio: 1;
+}
+
+.sk-tiles {
+    display: grid;
+    gap: 14px;
+}
+
+.sk-tile {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+}
+
+.sk-tile>div {
+    display: grid;
+    gap: 8px;
+    flex: 1;
+}
+
+.sk-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+}
+
+.sk-stat {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.sk-stat>div {
+    display: grid;
+    gap: 8px;
+}
+
+.sk-section {
+    display: grid;
+    gap: 14px;
+    padding-top: 70px;
+    padding-bottom: 80px;
+}
+
+.sk-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.sk-card {
+    display: grid;
+    gap: 12px;
+    padding: 0 0 18px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.sk-card .sk-bar {
+    margin: 0 18px;
+}
+
+.sk-art {
+    height: 150px;
+}
+
+@media (max-width: 1000px) {
+    .sk-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .sk-portrait {
+        order: -1;
+    }
+
+    .sk-portrait .sk {
+        width: min(70%, 260px);
+    }
+
+    .sk-hide-sm {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sk {
+        animation: none;
+    }
+}
