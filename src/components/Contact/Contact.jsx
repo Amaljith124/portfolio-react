@@ -3,11 +3,16 @@ import { ArrowUpRight, CheckCircle2, Mail } from 'lucide-react';
 import { submitEnquiry } from '../../webservices/webservices';
 import SectionHeading from '../SectionHeading/SectionHeading';
 import { PREFILL_EVENT } from '../Services/Services';
+import { usePortfolio } from '../../context/PortfolioContext';
+import { renderTitle } from '../../utils/richTitle';
 import './Contact.scss';
 
 const initialForm = { name: '', email: '', company: '', enquiryType: 'freelance', serviceType: 'backend-development', projectDescription: '', budget: '', timeline: '' };
 
 export default function Contact() {
+  const { portfolio, slug } = usePortfolio();
+  const contact = portfolio.contact || {};
+  const email = portfolio.profile.email || '';
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
@@ -30,7 +35,7 @@ export default function Contact() {
     event.preventDefault();
     setStatus('loading');
     setMessage('');
-    submitEnquiry(form)
+    submitEnquiry(form, slug)
       .then(function () {
         setStatus('success');
         setMessage("Thanks. Your enquiry has been received and I'll reply by email.");
@@ -43,7 +48,7 @@ export default function Contact() {
   }
 
   return <section className="contact-section section-wrap" id="contact">
-    <div className="contact-intro"><SectionHeading eyebrow="Get in touch" title={<>Have something<br /><span>in mind?</span></>} description="Tell me a little about what you're building. I'll get back to you by email." /><a className="contact-email" href="mailto:amaljithanaswar@gmail.com"><Mail size={17} /> amaljithanaswar@gmail.com <ArrowUpRight size={15} /></a></div>
+    <div className="contact-intro"><SectionHeading eyebrow={contact.eyebrow} title={renderTitle(contact.title)} description={contact.description} />{email && <a className="contact-email" href={`mailto:${email}`}><Mail size={17} /> {email} <ArrowUpRight size={15} /></a>}</div>
     <form className="contact-form" onSubmit={submit}>
       <div className="form-row"><label>Your name<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Jane Doe" /></label><label>Email address<input type="email" name="email" value={form.email} onChange={update} required maxLength="255" placeholder="jane@company.com" /></label></div>
       <div className="form-row"><label>Company (optional)<input name="company" value={form.company} onChange={update} maxLength="160" placeholder="Company name" /></label><label>I'm reaching out about<select name="enquiryType" value={form.enquiryType} onChange={update}><option value="freelance">Freelance project</option><option value="career">Career opportunity</option><option value="other">Something else</option></select></label></div>

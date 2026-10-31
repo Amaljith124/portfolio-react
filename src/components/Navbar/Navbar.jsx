@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { usePortfolio } from '../../context/PortfolioContext';
 import './Navbar.scss';
 
 const links = [
@@ -15,6 +16,8 @@ const links = [
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const { portfolio, basePath } = usePortfolio();
+  const profile = portfolio.profile;
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -27,7 +30,7 @@ export default function Navbar() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       setScrolled(y > 12);
       setProgress(max > 0 ? Math.min(1, y / max) : 0);
-      if (pathname === '/') {
+      if (pathname.replace(/\/$/, '') === basePath) {
         let current = 'home';
         links.forEach(function ([, id]) {
           const node = document.getElementById(id);
@@ -39,7 +42,7 @@ export default function Navbar() {
         });
         setActive(current);
       } else {
-        setActive(pathname.startsWith('/projects') ? 'projects' : '');
+        setActive(pathname.startsWith(`${basePath}/projects`) ? 'projects' : '');
       }
     }
     onScroll();
@@ -49,7 +52,7 @@ export default function Navbar() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [pathname]);
+  }, [pathname, basePath]);
 
   function closeMenu() {
     setMenuOpen(false);
@@ -58,13 +61,13 @@ export default function Navbar() {
   return (
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="nav-shell">
-        <Link to="/#home" className="brand" onClick={closeMenu}>
-          <span className="brand-mark">AA</span>
-          <span className="brand-name">Amaljith Anaswaran</span>
+        <Link to={`${basePath}/#home`} className="brand" onClick={closeMenu}>
+          <span className="brand-mark">{profile.initials}</span>
+          <span className="brand-name">{profile.name}</span>
         </Link>
         <nav className={`nav-links ${menuOpen ? 'is-open' : ''}`} aria-label="Main">
           {links.map(([label, id]) => (
-            <Link to={`/#${id}`} key={id} className={active === id ? 'is-active' : ''} onClick={closeMenu}>{label}</Link>
+            <Link to={`${basePath}/#${id}`} key={id} className={active === id ? 'is-active' : ''} onClick={closeMenu}>{label}</Link>
           ))}
         </nav>
         <div className="nav-actions">
@@ -73,7 +76,7 @@ export default function Navbar() {
             <Sun size={15} className="sun" />
             <Moon size={15} className="moon" />
           </button>
-          <Link className="button button-primary nav-cta" to="/#contact" onClick={closeMenu}>Let's Work Together <ArrowRight size={16} /></Link>
+          <Link className="button button-primary nav-cta" to={`${basePath}/#contact`} onClick={closeMenu}>Let's Work Together <ArrowRight size={16} /></Link>
           <button className="icon-button menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

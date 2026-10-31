@@ -1,4 +1,5 @@
-$font-body: 'DM Sans', sans-serif;
-$font-heading: 'Manrope', sans-serif;
+// The fonts come from custom properties set by the theme (--font-body / --font-heading); the fallback is the original font.
+$font-body: var(--font-body, 'DM Sans', sans-serif);
+$font-heading: var(--font-heading, 'Manrope', sans-serif);
 $breakpoint-tablet: 900px;
 $breakpoint-mobile: 600px;

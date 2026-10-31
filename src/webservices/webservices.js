@@ -1,8 +1,12 @@
 import { projects as demoProjects } from "../data/projects";
+import { defaultPortfolio } from "../data/defaultPortfolio";
 
-const BASE_URL = (
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/general"
-).replace(/\/$/, "");
+// VITE_API_BASE_URL is the API root, e.g. http://localhost:5000/api; the visitor routes live under /general, the public
+// portfolio routes under /public and the admin routes under /admin. The old value that ends in /general still works.
+export const API_ROOT = (
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"
+).replace(/\/$/, "").replace(/\/general$/, "");
+const BASE_URL = `${API_ROOT}/general`;
 export const DEMO_MODE = String(import.meta.env.VITE_DEMO_MODE ?? "true").toLowerCase() === "true";
 
 // Paths of the Node server, relative to BASE_URL. ":slug" is replaced when the request is made.
@@ -10,6 +14,7 @@ const endpoints = {
     projects: "/project",
     project: "/project/:slug",
     enquiry: "/enquiry",
+    chatStart: "/chat/start",
     chatMessage: "/chat/message"
 };
 
@@ -82,6 +87,42 @@ function demoResponse(data, milliseconds, source)
     });
 }
 
+// The public portfolio of a slug: { slug, name, portfolio, theme (resolved), features }. In demo mode only the bundled default exists.
+export function getPortfolio(slug)
+{
+    if (DEMO_MODE)
+    {
+        return new Promise(function (resolve, reject)
+        {
+            if (slug === defaultPortfolio.slug)
+            {
+                resolve(defaultPortfolio);
+            }
+            else
+            {
+                reject(new Error("No such portfolio"));
+            }
+        });
+    }
+    else
+    {
+        return makeRequest(`${API_ROOT}/public/portfolios/${encodeURIComponent(slug)}`);
+    }
+}
+
+// The portfolio behind a magic link token (/portfolio/<token>). Needs the Node server: there is no demo copy.
+export function getPortfolioByToken(token)
+{
+    if (DEMO_MODE)
+    {
+        return Promise.reject(new Error("No such portfolio"));
+    }
+    else
+    {
+        return makeRequest(`${API_ROOT}/public/magic/${encodeURIComponent(token)}`);
+    }
+}
+
 export function getProjects()
 {
     if (DEMO_MODE)
@@ -132,7 +173,8 @@ export function getProject(slug)
     }
 }
 
-export function submitEnquiry(formData)
+// slug: the portfolio the enquiry is for (the server uses its default portfolio when it is missing)
+export function submitEnquiry(formData, slug)
 {
     if (DEMO_MODE)
     {
@@ -147,12 +189,29 @@ export function submitEnquiry(formData)
     {
         return makeRequest(`${BASE_URL}${endpoints.enquiry}`, {
             method: "POST",
-            body: JSON.stringify(formData)
+            body: JSON.stringify({ ...formData, slug: slug })
         });
     }
 }
 
-export function sendChatMessage(sessionId, message)
+// Starts or resumes the chat of a visitor: the session belongs to the email on this portfolio. Resolves
+// { sessionId, visitorName, visitorEmail, resumed, messages: [{ role, message, createdDate }] } - the earlier messages of that email, if any.
+export function startChatSession(slug, name, email)
+{
+    if (DEMO_MODE)
+    {
+        return demoResponse({ sessionId: `demo-session-${Date.now()}`, visitorName: name, visitorEmail: email, resumed: false, messages: [] }, 350, "startChatSession");
+    }
+    else
+    {
+        return makeRequest(`${BASE_URL}${endpoints.chatStart}`, {
+            method: "POST",
+            body: JSON.stringify({ slug: slug, name: name, email: email })
+        });
+    }
+}
+
+export function sendChatMessage(slug, sessionId, message)
 {
     if (DEMO_MODE)
     {
@@ -167,7 +226,7 @@ export function sendChatMessage(sessionId, message)
     {
         return makeRequest(`${BASE_URL}${endpoints.chatMessage}`, {
             method: "POST",
-            body: JSON.stringify({ sessionId: sessionId, message: message })
+            body: JSON.stringify({ slug: slug, sessionId: sessionId, message: message })
         });
     }
 }

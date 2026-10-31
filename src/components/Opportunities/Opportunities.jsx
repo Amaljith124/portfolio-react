@@ -1,14 +1,26 @@
 import React from 'react';
-import { ArrowUpRight, BriefcaseBusiness, Handshake } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import SectionHeading from '../SectionHeading/SectionHeading';
+import { usePortfolio } from '../../context/PortfolioContext';
+import { getIcon } from '../../utils/icons';
 import './Opportunities.scss';
 
 export default function Opportunities() {
+  const { portfolio, basePath } = usePortfolio();
+  const section = portfolio.opportunities || {};
+  const items = section.items || [];
+  const email = portfolio.profile.email || '';
+
+  // "{email}" in a link is the owner's contact email; "#section" links stay on this portfolio's page
+  function linkFor(href) {
+    const link = String(href || '').replace('{email}', email);
+    return link.startsWith('#') ? `${basePath}${link}` : link;
+  }
+
   return <section className="opportunities-section section-wrap" id="opportunities">
-    <SectionHeading eyebrow="What's next" title="Open to meaningful work" description="I'm interested in good engineering problems, thoughtful teams and collaborations that create useful products." />
+    <SectionHeading eyebrow={section.eyebrow} title={section.title} description={section.description} />
     <div className="opportunity-grid stagger">
-      <article><BriefcaseBusiness size={25} /><small>CAREER</small><h3>Backend & full-stack roles</h3><p>Backend Developer, Full Stack Developer, Python Developer and Applied AI / GenAI application roles.</p><a href="mailto:amaljithanaswar@gmail.com?subject=Career%20opportunity">Discuss an opportunity <ArrowUpRight size={15} /></a></article>
-      <article><Handshake size={25} /><small>FREELANCE</small><h3>Project collaborations</h3><p>Backend APIs, AI integrations, third-party integrations and full-stack application development.</p><a href="#contact">Start a conversation <ArrowUpRight size={15} /></a></article>
+      {items.map(({ icon, tag, title, text, linkLabel, href }) => { const Icon = getIcon(icon); return <article key={title}><Icon size={25} /><small>{tag}</small><h3>{title}</h3><p>{text}</p><a href={linkFor(href)}>{linkLabel} <ArrowUpRight size={15} /></a></article>; })}
     </div>
   </section>;
 }

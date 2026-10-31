@@ -1,23 +1,17 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import ProjectDetail from './pages/ProjectDetail';
-import Navbar from './components/Navbar/Navbar';
-import Footer from './components/Footer/Footer';
-import ChatWidget from './components/ChatWidget/ChatWidget';
-import ScrollToHash from './components/ScrollToHash';
+import { DefaultPortfolio, MagicPortfolio, UserPortfolio } from './components/PortfolioShell';
+
+// the admin area is a separate chunk: visitors of the portfolio never download it
+const AdminApp = lazy(() => import('./pages/Admin/AdminApp'));
 
 export default function App() {
   return (
-    <>
-      <ScrollToHash />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects/:slug" element={<ProjectDetail />} />
-      </Routes>
-      <Footer />
-      <ChatWidget />
-    </>
+    <Routes>
+      <Route path="/admin/*" element={<Suspense fallback={null}><AdminApp /></Suspense>} />
+      <Route path="/portfolio/:token/*" element={<MagicPortfolio />} />
+      <Route path="/p/:slug/*" element={<UserPortfolio />} />
+      <Route path="/*" element={<DefaultPortfolio />} />
+    </Routes>
   );
 }
